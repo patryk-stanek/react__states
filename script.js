@@ -55,12 +55,10 @@ var Counter = React.createClass({
         console.log(this.state);
         console.log(this.props);
         console.log(ReactDOM.findDOMNode(this));
-        this.interval = setInterval(this.increment, 1000);
     },
 
     // 6. wywoływane raz, po wyrenderowaniu komponentu, mimo wymontowania trzeba wyczyścić np. setInterval
     componentWillUnmount: function() {
-        clearInterval(this.interval);
         console.log('6. Komponent został wymontowany.');
     }
 });
