@@ -1,23 +1,45 @@
 var Counter = React.createClass({
-    getInitialState: function() {//określamy początkowy stan naszego komponentu
-        return {
-            counter: 0
-        };
-    },
 
+    // metody potrzebne do prawidłowego działania render
     increment: function() {
+        console.log('Inkrementacja.')
         this.setState({
             counter: this.state.counter + 1
         });
     },
 
     decrement: function() {
+        console.log('Dekrementacja.')
         this.setState({
             counter: this.state.counter - 1
         });
     },
 
+    // HIERARCHIA?
+
+    // 1. wywoływane raz, przed wyrenderowaniem komponentu kiedy nasza klasa zostaje stworzona
+    getDefaultProps: function() {
+        console.log('1. Pobieranie domyślnych właściwości.');
+    },
+
+    // 2. wywoływane raz, przed wyrenderowaniem komponentu
+    getInitialState: function() {//określamy początkowy stan naszego komponentu
+        console.log('2. Pobieranie domyślnego stanu obiektu.');
+        return {
+            counter: 0
+        };
+    },
+
+    // 3. wywoływane raz, przed wyrenderowaniem komponentu, ten element nie ma dostępu do DOM ale ma dostęp do props i state
+    componentWillMount: function() {
+        console.log(this.props);
+        console.log(this.state);
+        console.log('3. Komponent został zamontowany.');
+    },
+
+    // 4. wywoływane za każdym razem gdy nasz obiekt zostaje zmieniony
     render: function() {
+        console.log('4. Renderowanie komponentu.')
         return (
             React.createElement('div', {},
                 React.createElement('span', {}, 'Licznik ' + this.state.counter),//this.state odpwoluje sie do wartosci znajdujacej sie pod kluczem counter
@@ -25,8 +47,44 @@ var Counter = React.createClass({
                 React.createElement('button', {onClick: this.decrement}, '-1')
             )
         )
+    },
+
+    // 5. wywoływane raz, po wyrenderowaniu komponentu
+    componentDidMount: function() {
+        console.log('5. Komponent został wyrenderowany.');
+        console.log(this.state);
+        console.log(this.props);
+        console.log(ReactDOM.findDOMNode(this));
+        this.interval = setInterval(this.increment, 1000);
+    },
+
+    // 6. wywoływane raz, po wyrenderowaniu komponentu, mimo wymontowania trzeba wyczyścić np. setInterval
+    componentWillUnmount: function() {
+        clearInterval(this.interval);
+        console.log('6. Komponent został wymontowany.');
     }
 });
 
-var element = React.createElement(Counter);
+var CounterContainer = React.createClass({
+    mount: function() {
+        var x = React.createElement(Counter);
+        ReactDOM.render(x, document.getElementById('renderHere'));
+    },
+    unmount: function() {
+        ReactDOM.unmountComponentAtNode(document.getElementById('renderHere'));
+    },
+
+    render: function() {
+        console.log('0. Kontener licznika został wyrenderowany');
+        return (
+            React.createElement('div', {},
+                React.createElement('button', {onClick: this.mount}, 'Umieść'),
+                React.createElement('button', {onClick: this.unmount}, 'Usuń'),
+                React.createElement('div', {id: 'renderHere'})
+            )
+        )
+    }
+});
+
+var element = React.createElement(CounterContainer);
 ReactDOM.render(element, document.getElementById('app'));
