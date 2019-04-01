@@ -2,7 +2,8 @@ var Counter = React.createClass({
 
     // metody potrzebne do prawidłowego działania render
     increment: function() {
-        console.log('Inkrementacja.')
+        console.log('Inkrementacja.');
+        console.log(this)
         this.setState({
             counter: this.state.counter + 1
         });
@@ -66,10 +67,16 @@ var Counter = React.createClass({
 var CounterContainer = React.createClass({
     mount: function() {
         var x = React.createElement(Counter);
-        ReactDOM.render(x, document.getElementById('renderHere'));
+        var y = React.createElement(Counter);
+        var z = React.createElement(Counter);
+        ReactDOM.render(x, document.getElementById('render1'));
+        ReactDOM.render(y, document.getElementById('render2'));
+        ReactDOM.render(z, document.getElementById('render3'));
     },
     unmount: function() {
-        ReactDOM.unmountComponentAtNode(document.getElementById('renderHere'));
+        ReactDOM.unmountComponentAtNode(document.getElementById('render1'));
+        ReactDOM.unmountComponentAtNode(document.getElementById('render2'));
+        ReactDOM.unmountComponentAtNode(document.getElementById('render3'));
     },
 
     render: function() {
@@ -78,7 +85,9 @@ var CounterContainer = React.createClass({
             React.createElement('div', {},
                 React.createElement('button', {onClick: this.mount}, 'Umieść'),
                 React.createElement('button', {onClick: this.unmount}, 'Usuń'),
-                React.createElement('div', {id: 'renderHere'})
+                React.createElement('div', {id: 'render1'}),
+                React.createElement('div', {id: 'render2'}),
+                React.createElement('div', {id: 'render3'}),
             )
         )
     }
